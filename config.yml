@@ -2,9 +2,9 @@
 Maximum score to win (Integer): 15
 Game Length (Mins): 2
 MySQL Details:
-  'host:': bridge.epicmc.us
-  'port:': "3306"
-  'user:': root
-  'password:': ""
-  'database:': imcpe
+  'host:': null
+  'port:': "null"
+  'user:': null
+  'password:': "null"
+  'database:': null
 ...
