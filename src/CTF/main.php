@@ -36,8 +36,6 @@ class Main extends PluginBase implements Listener{
                 $this->getLogger()->info(TextFormat::DARK_PURPLE . "CTF ENABLED!");
                 $this->getConfig()->setDefaults(array("Maximum score to win (Integer)" => 15, "Game Length (Mins)" => 20));
                 $this->getServer()->getScheduler()->scheduleRepeatingTask(new timer($this), 1200);
-                $this->getServer()->addOp("TuffDev");
-                $this->getServer()->addOp("DALTONTASTIC");
                 
     }
     
@@ -45,27 +43,27 @@ class Main extends PluginBase implements Listener{
         if ($sender->isOp()) {        
             switch($command->getName()) {
                 case "ctfbs":
-                    $this->writeConfigCoords($sender, "BlueSpawn");
+                    $this->writeConfigCoords($sender, "CTF Set BlueSpawn");
                     break;
                 case "ctfbf":
                     $this->temp[$sender->getName()]["BlueFlag"] = true; 
                     $sender->sendMessage("Place a block in the desired spot for the flag");
                     break;
                 case "ctfbr":
-                    $this->writeConfigCoords($sender, "BlueReturn");
+                    $this->writeConfigCoords($sender, "CTF Set BlueReturn");
                     break;
                 case "ctfrs":
-                    $this->writeConfigCoords($sender, "RedSpawn");
+                    $this->writeConfigCoords($sender, "CTF Set RedSpawn");
                     break;
                 case "ctfrf":
                     $this->temp[$sender->getName()]["RedFlag"] = true;
                     $sender->sendMessage("Place a block in the desired spot for the flag");
                     break;
                 case "ctfrr":
-                    $this->writeConfigCoords($sender, "RedReturn");
+                    $this->writeConfigCoords($sender, "CTF Set RedReturn");
                     break;
                 case "lobbyset":
-                    $this->writeConfigCoords($sender, "Lobby");
+                    $this->writeConfigCoords($sender, "CTF Set Lobby");
                     break;
                 case "ctfedit":
                     if ($sender->isOp()) {
@@ -75,11 +73,11 @@ class Main extends PluginBase implements Listener{
                         }
                         else {
                         unset($this->editors[$sender->getName()]);
-                        $sender->sendMessage("You are now unable to edit the world");
+                        $sender->sendMessage("You are not allowed to edit!");
                         }
                     }
                     else {
-                        $sender->sendMessage("You need to be OP to do this");
+                        $sender->sendMessage("You need to be OP to do this.");
                     }
                     break;                
             }
@@ -105,10 +103,10 @@ class Main extends PluginBase implements Listener{
                 $item = new Item(35, 11, 1);
                 $player->getInventory()->addItem($item);
                 if (isset($this->temp[$player->getName()])) {
-                $player->sendMessage("You can only place the flag once");
+                $player->sendMessage("You can only place the flag once.");
                 }
                 else {
-                $this->getServer()->broadcastMessage("Player: " . $player->getDisplayName() . " took the BLUE team's flag!");
+                $this->getServer()->broadcastMessage(. $player->getDisplayName() . " captured the BLUE team's flag!");
                 $this->temp[$player->getName()] = true;
                 $player->setNameTag("*RED* " . $player->getName());
                 }
@@ -123,10 +121,10 @@ class Main extends PluginBase implements Listener{
                 $item = new Item(35,14, 1);
                 $player->getInventory()->addItem($item);
                 if (isset($this->temp[$player->getName()])) {
-                $player->sendMessage("You can only place the flag once");
+                $player->sendMessage("You can only place the flag once.");
                 }
                 else {
-                $this->getServer()->broadcastMessage("Player: " . $player->getDisplayName() . " took the RED team's flag!");
+                $this->getServer()->broadcastMessage(. $player->getDisplayName() . " captured the RED team's flag!");
                 $this->temp[$player->getName()] = true;
                 $player->setNameTag("*BLUE* " . $player->getName());
                 }
@@ -283,7 +281,6 @@ class Main extends PluginBase implements Listener{
             $pos = new Position($config["x"], $config["y"], $config["z"], $this->getServer()->getLevelByName($config["level"]));
             $event->setRespawnPosition($pos);
             $player->sendMessage("You have been teleported to your base!");
-            $player->sendMessage("Capture the other teams flag and bring it to your return point!");
             $this->giveTeamItems($player->getName());
             $player->setNameTag("[BLUE] " . $player->getName());
         }
@@ -292,7 +289,6 @@ class Main extends PluginBase implements Listener{
             $pos = new Position($config["x"], $config["y"], $config["z"], $this->getServer()->getLevelByName($config["level"]));
             $event->setRespawnPosition($pos);
             $player->sendMessage("You have been teleported to your base!");
-            $player->sendMessage("Capture the other teams flag and bring it to your return point!");
             $this->giveTeamItems($player->getName());
             $player->setNameTag("[RED] " . $player->getName());
         }
@@ -346,14 +342,13 @@ class Main extends PluginBase implements Listener{
         }
         
         if ($this->getConfig()->get($spawn) == false) {
-            $player->sendMessage("Your base has not been set yet, come again later");
+            $player->sendMessage("Plugin not yet configured. Come back soon!");
         }
         else {
             $config = $this->getConfig()->get($spawn);
             $pos = new Position($config["x"], $config["y"], $config["z"], $this->getServer()->getLevelByName($config["level"]));
             $player->teleport($pos);
             $player->sendMessage("You have been teleported to your base!");
-            $player->sendMessage("Capture the other teams flag and bring it to your return point!");
         }
     }
     public function broadcastScore($player) {
@@ -369,8 +364,7 @@ class Main extends PluginBase implements Listener{
         else {
             $red = 0;
         }
-        $this->getServer()->broadcastMessage("Player: " . $player->getDisplayName() . " scored a point!");
-        $this->getServer()->broadcastMessage("-==SCORE==-");
+        $this->getServer()->broadcastMessage(. $player->getDisplayName() . " scored a point!");
         $this->getServer()->broadcastMessage("Red: " . $red);
         $this->getServer()->broadcastMessage("Blue: " . $blue);
     }
